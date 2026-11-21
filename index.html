@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Little Internet Garden</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono&family=Nunito:wght@400;700;900&display=swap');
+:root{--ink:#26372c;--paper:#fff9e9;--green:#bce5a7;--pink:#ffbfd0;--blue:#bce7f5;--yellow:#ffe58b}
+*{box-sizing:border-box}body{margin:0;background:#f5eedb;color:var(--ink);font-family:Nunito,sans-serif;background-image:radial-gradient(#d7cba9 1px,transparent 1px);background-size:17px 17px}
+.wrap{max-width:1050px;margin:auto;padding:18px}.bar,.panel,.hero,.garden{border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink)}
+.bar{background:var(--paper);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.brand{font-weight:900}.brand span{font-size:22px}
+button{font:inherit;cursor:pointer;color:var(--ink);font-weight:900}.nav{display:flex;gap:8px}.nav button,.btn,.tool{border:2px solid var(--ink);background:white;padding:8px 12px;box-shadow:3px 3px 0 var(--ink)}.nav .active,.primary{background:var(--yellow)}button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.hero{background:var(--green);padding:22px;margin-bottom:22px;position:relative;overflow:hidden}.eyebrow{font:11px 'DM Mono';letter-spacing:1.5px;text-transform:uppercase}h1{font-size:clamp(28px,5vw,44px);margin:7px 0;letter-spacing:-1px}.hero p{font-weight:700;line-height:1.55;max-width:680px;margin:0}.deco{position:absolute;right:22px;top:15px;font-size:64px}
+.layout{display:grid;grid-template-columns:1.6fr .8fr;gap:20px;align-items:start}.panel{background:var(--paper);padding:16px}.panel h2{margin:0 0 4px}.sub{font-size:13px;color:#69776a;font-weight:700;margin:0 0 13px}
+.canvaswrap{padding:8px;border:2px dashed #658a8a;background-color:#fff;background-image:linear-gradient(45deg,#e7e7e7 25%,transparent 25%),linear-gradient(-45deg,#e7e7e7 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e7e7e7 75%),linear-gradient(-45deg,transparent 75%,#e7e7e7 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0}canvas{display:block;width:100%;height:auto;background:white;touch-action:none;cursor:crosshair}
+.tools,.colors{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tool{font-size:13px;padding:7px 10px}.selected{background:var(--pink)!important}.swatch{width:27px;height:27px;border:2px solid var(--ink);border-radius:50%;padding:0;flex:0 0 27px}.swatch.active-swatch{outline:3px solid var(--ink);outline-offset:3px;transform:scale(1.08)}
+label{display:block;font-size:13px;font-weight:900;margin:12px 0 5px}input,textarea{width:100%;padding:10px;border:2px solid var(--ink);font:inherit;background:white}textarea{min-height:60px;resize:vertical}
+.note{background:var(--pink);border:2px solid var(--ink);padding:13px;font-weight:800;line-height:1.5;margin-bottom:13px}.note small{display:block;margin-top:6px;font-weight:600}.counter{background:var(--blue);border:2px solid var(--ink);padding:10px;text-align:center;font:12px 'DM Mono'}
+.hidden{display:none!important}.garden{min-height:400px;max-height:72vh;overflow-y:auto;overscroll-behavior:contain;padding:18px;background:linear-gradient(#dff3d4 0 70%,#a8d68f 70%);position:relative}.garden:before{content:none}.garden-grid{position:relative;display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:16px 10px;padding-top:35px;align-items:end}.treecard{background:transparent;border:0;padding:4px;text-align:center;cursor:pointer;box-shadow:none}.treecard img{width:100%;display:block;object-fit:contain;background:transparent}.treecard:hover{transform:translateY(-3px)}.empty{text-align:center;padding:70px 10px;font-weight:800;position:relative}.empty span{font-size:50px;display:block}.gardenhead{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px;gap:10px}.footer{text-align:center;padding:25px;font:11px 'DM Mono';color:#69776a}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:white;padding:12px 18px;z-index:5;border:2px solid white;font-weight:900}.modalbg{position:fixed;inset:0;background:#17231dcc;display:grid;place-items:center;padding:20px;z-index:4}.modal{background:var(--paper);border:3px solid var(--ink);box-shadow:7px 7px 0 var(--ink);padding:18px;width:min(390px,100%)}.modal canvas{width:100%;max-width:420px;margin:10px auto}
+@media(max-width:700px){.layout{grid-template-columns:1fr}.bar{align-items:flex-start;flex-direction:column}.nav{width:100%}.nav button{flex:1}.hero{padding-right:75px}.deco{right:10px;font-size:45px}}
+</style></head>
+<body><div class="wrap">
+<header class="bar"><div class="brand">🌱 THE LITTLE INTERNET GARDEN</div><nav class="nav"><button id="drawTab" class="active" onclick="page('draw')">✎ Draw a tree</button><button id="gardenTab" onclick="page('garden')">❀ Visit the garden</button></nav></header>
+<main id="drawPage">
+<section class="hero"><div class="eyebrow">A tiny community project · made by people</div><h1>A Garden Made by Everyone</h1><p>This is a little corner of the internet where everyone can plant a tree. Draw your own and place it in our shared garden. Every tree is made by a real person. Together, we're growing something special.</p><div class="deco">🌳</div></section>
+<div class="layout"><section class="panel"><h2>Make your tree</h2><p class="sub">There is no perfect way to draw a tree. That's the point. Your drawing is saved as a transparent PNG.</p>
+<div class="canvaswrap"><canvas id="art" width="700" height="440"></canvas></div>
+<div class="tools"><button class="tool selected" id="brush" onclick="setTool('brush')">✎ Pen</button><button class="tool" id="eraser" onclick="setTool('eraser')">⌫ Eraser</button><button class="tool" id="fill" onclick="setTool('fill')">▧ Fill colour</button><button class="tool" onclick="undo()">↶ Undo</button><button class="tool" onclick="clearArt()">Clear</button></div>
+<div class="colors"><b style="font-size:13px">12 COLOURS:</b>
+<button class="swatch active-swatch" style="background:#315c3b" data-c="#315c3b"></button><button class="swatch" style="background:#7a4b32" data-c="#7a4b32"></button><button class="swatch" style="background:#f07886" data-c="#f07886"></button><button class="swatch" style="background:#f2b83f" data-c="#f2b83f"></button><button class="swatch" style="background:#548fce" data-c="#548fce"></button><button class="swatch" style="background:#8c68b5" data-c="#8c68b5"></button><button class="swatch" style="background:#222" data-c="#222"></button><button class="swatch" style="background:#fff" data-c="#fff"></button><button class="swatch" style="background:#ff8c42" data-c="#ff8c42"></button><button class="swatch" style="background:#9bcae8" data-c="#9bcae8"></button><button class="swatch" style="background:#a7c957" data-c="#a7c957"></button><button class="swatch" style="background:#b56576" data-c="#b56576"></button></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px"><span class="sub" style="margin:0">Your tree will join the shared garden.</span><button class="btn primary" id="plantButton" onclick="plant()">🌱 Place your tree</button></div></section>
+<aside><div class="note">A small reminder:<br>Draw whatever a tree looks like in your head.<small>Wonky, tiny, colourful, imaginary or a little weird. No scores. No likes. No perfect trees.</small></div><section class="panel" style="margin-bottom:13px"><h2>How it works</h2><p class="sub" style="line-height:1.7">① Draw something.<br>② Plant it in the garden.<br>③ Come back and see what everyone has added.</p><button class="btn" style="width:100%" onclick="page('garden')">Explore the garden →</button></section><div class="counter">🌳 <span id="count">0</span> TREES IN THE SHARED GARDEN</div></aside></div></main>
+<main id="gardenPage" class="hidden"><section class="hero" style="background:var(--blue)"><div class="eyebrow">A shared place on the internet</div><h1>Look what we've grown.</h1><p>Every tree here was drawn by someone who stopped by. Have a wander. You might find something lovely.</p><div class="deco">🪺</div></section>
+<div class="gardenhead"><div><h2 style="margin:0">The community garden</h2><p class="sub" style="margin:3px 0"><span id="total">0</span> little trees and counting</p></div><button class="btn primary" onclick="page('draw')">＋ Plant a tree</button></div>
+<section class="garden"><div id="grid" class="garden-grid"></div><div id="empty" class="empty">The garden is waiting for its first tree.<br>It could be yours.</div></section></main>
+<footer class="footer">MADE SLOWLY, BY PEOPLE · PLEASE BE KIND TO EACH OTHER<br><span style="display:inline-block;margin-top:7px">A little project by <a href="https://github.com/suryakapoor124" target="_blank" rel="noopener noreferrer" style="color:inherit;font-weight:900">@suryakapoor124</a></span></footer></div>
+<div id="toast" class="toast hidden"></div><div id="modal" class="modalbg hidden" onclick="if(event.target===this)this.classList.add('hidden')"><div class="modal"><button class="tool" style="float:right" aria-label="Close preview" onclick="document.getElementById('modal').classList.add('hidden')">✕</button><canvas id="mcanvas" width="350" height="220" aria-label="Tree drawing preview"></canvas></div></div>
+<script>
+const c=document.getElementById('art');
+const x=c.getContext('2d',{willReadFrequently:true});
+let down=false,tool='brush',color='#315c3b',history=[];
+
+function snapshot(){history.push(x.getImageData(0,0,c.width,c.height));if(history.length>30)history.shift()}
+function clearArt(){x.clearRect(0,0,c.width,c.height);x.globalCompositeOperation='source-over';history=[];snapshot()}
+function undo(){if(history.length>1){history.pop();x.putImageData(history.at(-1),0,0)}}
+function setTool(t){tool=t;['brush','eraser','fill'].forEach(id=>document.getElementById(id).classList.toggle('selected',id===t))}
+
+document.querySelectorAll('.swatch').forEach(b=>b.onclick=()=>{
+  color=b.dataset.c;
+  document.querySelectorAll('.swatch').forEach(z=>z.classList.toggle('active-swatch',z===b));
+  if(tool==='eraser')setTool('brush');
+});
+
+function rgba(hex){return [parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16),255]}
+function floodFill(px,py){
+  const img=x.getImageData(0,0,c.width,c.height),d=img.data,w=c.width,h=c.height,k0=(py*w+px)*4;
+  const target=[d[k0],d[k0+1],d[k0+2],d[k0+3]],rep=rgba(color);
+  if(target.every((v,i)=>v===rep[i]))return;
+  const stack=[[px,py]],seen=new Uint8Array(w*h);
+  while(stack.length){
+    const [sx,sy]=stack.pop();
+    if(sx<0||sy<0||sx>=w||sy>=h)continue;
+    const pos=sy*w+sx;if(seen[pos])continue;seen[pos]=1;
+    const k=pos*4;
+    if(d[k]!==target[0]||d[k+1]!==target[1]||d[k+2]!==target[2]||d[k+3]!==target[3])continue;
+    d[k]=rep[0];d[k+1]=rep[1];d[k+2]=rep[2];d[k+3]=255;
+    stack.push([sx+1,sy],[sx-1,sy],[sx,sy+1],[sx,sy-1]);
+  }
+  x.putImageData(img,0,0);snapshot();
+}
+function point(e){
+  const r=c.getBoundingClientRect();
+  return {x:Math.max(0,Math.min(c.width-1,Math.floor((e.clientX-r.left)*c.width/r.width))),y:Math.max(0,Math.min(c.height-1,Math.floor((e.clientY-r.top)*c.height/r.height)))};
+}
+c.onpointerdown=e=>{
+  const p=point(e);if(tool==='fill'){floodFill(p.x,p.y);return;}
+  down=true;c.setPointerCapture(e.pointerId);x.beginPath();x.moveTo(p.x,p.y);
+  x.lineCap='round';x.lineJoin='round';x.lineWidth=tool==='eraser'?30:7;
+  x.strokeStyle=color;x.globalCompositeOperation=tool==='eraser'?'destination-out':'source-over';
+};
+c.onpointermove=e=>{if(!down)return;const p=point(e);x.lineWidth=tool==='eraser'?30:7;x.lineTo(p.x,p.y);x.stroke()};
+c.onpointerup=()=>{if(down){down=false;x.globalCompositeOperation='source-over';snapshot()}};
+c.onpointercancel=()=>{down=false;x.globalCompositeOperation='source-over'};
+
+// Shared garden state comes from MySQL through trees.php, never browser storage.
+const grid=document.getElementById('grid');
+const garden=document.querySelector('.garden');
+let initialized=false,loading=false,hasMore=false,nextBefore=null,loadedOlder=false,totalTrees=0;
+const loadedIds=new Set();
+let toastTimer=null,planting=false;
+
+function say(message){
+  const toast=document.getElementById('toast');toast.textContent=message;toast.classList.remove('hidden');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.add('hidden'),3000);
+}
+function updateCounts(){
+  document.getElementById('total').textContent=totalTrees;
+  document.getElementById('count').textContent=totalTrees;
+  document.getElementById('empty').classList.toggle('hidden',totalTrees>0);
+}
+function makeTreeCard(tree){
+  const button=document.createElement('button');button.className='treecard';button.type='button';button.setAttribute('aria-label','Open tree drawing');
+  const img=document.createElement('img');img.src=tree.image;img.alt='A community tree drawing';img.loading='lazy';img.decoding='async';
+  button.appendChild(img);button.addEventListener('click',()=>detail(tree.image));return button;
+}
+function appendTrees(trees,prepend=false){
+  const fresh=trees.filter(tree=>!loadedIds.has(String(tree.id)));
+  if(prepend){
+    for(let i=fresh.length-1;i>=0;i--){const tree=fresh[i];loadedIds.add(String(tree.id));grid.prepend(makeTreeCard(tree));}
+  }else{
+    for(const tree of fresh){loadedIds.add(String(tree.id));grid.appendChild(makeTreeCard(tree));}
+  }
+}
+async function readServerJson(response, action){
+  const raw=await response.text();
+  const clean=raw.replace(/^\uFEFF/,'').trim();
+  let data;
+  try{data=JSON.parse(clean);}catch(e){
+    const preview=clean.replace(/<script[\s\S]*?<\/script>/gi,' ')
+      .replace(/<style[\s\S]*?<\/style>/gi,' ')
+      .replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,160);
+    const detail=preview?' Server reply: '+preview:'';
+    throw new Error(action+' received a non-JSON reply (HTTP '+response.status+').'+detail);
+  }
+  if(!response.ok)throw new Error(data?.error||action+' failed (HTTP '+response.status+').');
+  return data;
+}
+async function getGardenPage(url='trees.php'){
+  const response=await fetch(new URL(url,window.location.href),{
+    method:'GET',cache:'no-store',credentials:'same-origin',
+    headers:{'Accept':'application/json'}
+  });
+  const data=await readServerJson(response,'The garden');
+  if(!data||!Array.isArray(data.trees))throw new Error(data?.error||'Could not load the garden.');
+  return data;
+}
+async function loadFirstPage(){
+  if(loading)return;loading=true;
+  try{
+    const data=await getGardenPage();
+    grid.innerHTML='';loadedIds.clear();appendTrees(data.trees);
+    totalTrees=Number(data.total)||0;hasMore=Boolean(data.hasMore);nextBefore=data.nextBefore||null;
+    loadedOlder=false;initialized=true;updateCounts();
+  }catch(error){say(error.message||'Could not load the shared garden.');}
+  finally{loading=false;}
+}
+async function refreshLatest(){
+  if(loading||!initialized)return;loading=true;
+  try{
+    const data=await getGardenPage();
+    appendTrees(data.trees,true);totalTrees=Number(data.total)||0;
+    // Keep the current older-page cursor once someone has scrolled into older trees.
+    if(!loadedOlder){hasMore=Boolean(data.hasMore);nextBefore=data.nextBefore||null;}
+    updateCounts();
+  }catch(error){console.warn(error);}
+  finally{loading=false;}
+}
+async function loadMore(){
+  if(loading||!hasMore||!nextBefore)return;loading=true;
+  try{
+    const data=await getGardenPage('trees.php?before='+encodeURIComponent(nextBefore));
+    appendTrees(data.trees);totalTrees=Number(data.total)||totalTrees;
+    hasMore=Boolean(data.hasMore);nextBefore=data.nextBefore||null;loadedOlder=true;updateCounts();
+  }catch(error){say(error.message||'Could not load more trees.');}
+  finally{loading=false;}
+}
+garden.addEventListener('scroll',()=>{
+  if(garden.scrollTop+garden.clientHeight>=garden.scrollHeight-240)loadMore();
+});
+
+async function plant(){
+  if(planting)return;
+  const pixels=x.getImageData(0,0,c.width,c.height).data;let drawn=false;
+  for(let i=3;i<pixels.length;i+=4){if(pixels[i]>0){drawn=true;break;}}
+  if(!drawn){say('Draw your tree before planting it.');return;}
+  planting=true;const button=document.getElementById('plantButton');button.disabled=true;button.textContent='Planting…';
+  try{
+    // Send the PNG as a real file instead of a larger base64 JSON string.
+    const png=await new Promise((resolve,reject)=>{
+      if(!c.toBlob){reject(new Error('This browser cannot export the drawing. Please open the site in Safari or Chrome.'));return;}
+      c.toBlob(blob=>blob?resolve(blob):reject(new Error('Could not prepare your drawing. Please try again.')),'image/png');
+    });
+    if(png.size>2*1024*1024)throw new Error('This drawing is too large to upload. Try a simpler drawing.');
+    const form=new FormData();form.append('image',png,'tree.png');
+    const response=await fetch(new URL('upload.php',window.location.href),{
+      method:'POST',body:form,cache:'no-store',credentials:'same-origin',
+      headers:{'Accept':'application/json'}
+    });
+    const data=await readServerJson(response,'Upload');
+    if(!data.success)throw new Error(data?.error||'Your tree could not be planted.');
+    clearArt();
+    if(!initialized)await loadFirstPage();else await refreshLatest();
+    say('Your tree has joined the shared garden.');
+    await page('garden');
+  }catch(error){say(error.message||'Could not send your tree. Please try again.');}
+  finally{planting=false;button.disabled=false;button.textContent='🌱 Place your tree';}
+}
+
+function detail(imagePath){
+  const image=new Image(),mc=document.getElementById('mcanvas'),mx=mc.getContext('2d');
+  mx.clearRect(0,0,mc.width,mc.height);
+  image.onload=()=>{mx.clearRect(0,0,mc.width,mc.height);mx.drawImage(image,0,0,mc.width,mc.height);};
+  image.src=imagePath;document.getElementById('modal').classList.remove('hidden');
+}
+async function page(p){
+  document.getElementById('drawPage').classList.toggle('hidden',p!=='draw');
+  document.getElementById('gardenPage').classList.toggle('hidden',p!=='garden');
+  document.getElementById('drawTab').classList.toggle('active',p==='draw');
+  document.getElementById('gardenTab').classList.toggle('active',p==='garden');
+  if(p==='garden'){if(!initialized)await loadFirstPage();else await refreshLatest();}
+  scrollTo({top:0,behavior:'smooth'});
+}
+
+clearArt();
+loadFirstPage();
+// Visitors looking at the garden see new plantings within a few seconds.
+setInterval(()=>{
+  if(!document.hidden&&!document.getElementById('gardenPage').classList.contains('hidden'))refreshLatest();
+},5000);
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden&&!document.getElementById('gardenPage').classList.contains('hidden'))refreshLatest();
+});
+</script></body></html>
